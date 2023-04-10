@@ -5,35 +5,39 @@
 ## (and the matrix has not changed), then the cachesolve should retrieve 
 ## the inverse from the cache.
 
-
+library(MASS)
 makeCacheMatrix <- function(x = matrix()) {
-  i <- NULL
-  set <- function(y) {
-    x <<- y
-    i <<- NULL
+  inv<-NULL
+  set<-function(y){
+    x<<-y
+    inv<<-NULL
+    }
+  get<-function()x
+  setinv<-function(inverse)inv<<-inverse
+  getinv<-function(){
+                    inver<-ginv(x)
+                    inver%%x
   }
-  get <- function() x
-  setinverse <- function(inverse) i <<- inverse
-  getinverse <- function() i
-  list(set = set,
-       get = get,
-       setinverse = setinverse,
-       getinverse = getinverse)
+  list(set = set, get = get,
+       setinv = setinv ,
+       getinv = getinv)
 }
 
 
 
 
+
 cacheSolve <- function(x, ...) {
-  i <- x$getinverse()
-  if (!is.null(i)) {
-    message("getting cached data")
-    return(i)
   }
-  data <- x$get()
-  i <- solve(data, ...)
-  x$setinverse(i)
-  i
+ inv<-x$getinv()
+ if(!is.null(inv)){
+                  message("getting cached data")
+                  return(inv)
+ }
+ data<-x$get()
+ inv<-solve(data,...)
+ x$setinv(inv)
+ inv
 }
 
 B <- matrix(c(4,2,7,4),2,2)
